@@ -1,0 +1,24 @@
+{ 
+  "name": "oh-queue",
+  "version": "0.0.1",
+  "description": "online office hours queue",
+  "main": "app.js",
+  "author": "Ezaan Mangalji",
+  "scripts": {
+  	"start": "node app.js"
+  },
+  "dependencies": {
+  	"express": "3.3.8",
+    "aws-sdk": "*",
+    "ejs": "*",
+    "async": "*",
+    "lru-cache" : "*",
+    "grunt": "^0.4.5",
+    "grunt-eslint": "^18.0.0",
+    "grunt-mocha-phantomjs": "^3.0.0",
+    "grunt-shell": "^1.2.1",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0",
+    "gulp-zip": "^3.2.0"
+  }
+}

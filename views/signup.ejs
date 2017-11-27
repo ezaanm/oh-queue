@@ -6,6 +6,12 @@
   </head>
   <body>
     <h1> Make a new account kiddo </h1>
+    
+    <%if (error != null) { %>
+    <font color="red"><%= message %><p>
+    <% } %>
+    <font color="black">
+    
     <form action="/createAccount" method="post">
     	<b>New username here boi:</b> <br>
       <input type="text" name="username"> <br>

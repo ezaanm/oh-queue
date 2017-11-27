@@ -1,7 +1,7 @@
 var db = require('../db/databases.js');
 
 var getLogin = function (req, res) {
-  res.render('login.ejs', {message: req.session.err});
+  res.render('login.ejs', {error: req.session.err});
   req.session.err = null;
 }
 
@@ -12,7 +12,7 @@ var checkLogin = function (req, res) {
 }
 
 var signUp = function (req, res) {
-  res.render('signup.ejs', {message: req.session.err});
+  res.render('signup.ejs', {error: req.session.err});
   req.session.err = null;
 }
 

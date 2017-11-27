@@ -6,6 +6,12 @@
   </head>
   <body>
     <h1> Login to the OH Queue Homies </h1>
+    
+    <%if (error != null) { %>
+    <font color="red"><%= message %><p>
+    <% } %>
+    <font color="black">
+    
     <form action="/checkLogin" method="post">
     	<b>Username here boi:</b> <br>
       <input type="text" name="username"> <br>

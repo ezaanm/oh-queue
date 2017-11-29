@@ -7,6 +7,7 @@ app.use(express.logger('default'));
 app.use(express.cookieParser());
 app.use(express.session({secret: 'duck'}));
 
+//all routes of the site
 app.get('/', routes.get_login);
 app.post('/checkLogin', routes.check_login);
 app.get('/signup', routes.sign_up);

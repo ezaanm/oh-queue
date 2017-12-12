@@ -377,6 +377,31 @@
       callback(err, values);
     });
   };
+  
+  keyvaluestore.prototype.getItems = function(callback) {
+    var self = this;
+    
+    var params = {
+        TableName: self.tableName,
+        AttributesToGet: ['keyword', 'inx', 'value']
+    };
+
+    db.scan(params, function(err, data) {
+      var values = [];
+      
+      if (!err) {
+        for (var i = 0; i < data.Count; i++) {
+          values.push({
+            "key": data.Items[i].keyword['S'],
+            "inx": data.Items[i].inx['N'],
+            "value": data.Items[i].value['S']
+          });
+        }
+      }
+      
+      callback(err, values);
+    });
+  };
 
 
   /**

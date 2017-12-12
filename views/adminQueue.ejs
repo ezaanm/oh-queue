@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>OH Queue</title>
+  </head>
+  <body>
+    <h1> Admin Q 4 the TA Wizards</h1>
+    <button id="clearButton"> Clear Queue </button>
+    <h2 id="qCount"> There are now 0 students in the Q. </h2>
+    <font color="red"><h2 id="alerts"><h2></font>
+    <table id="qTable" style="width:100%">
+      <tr>
+        <th> Name </th>
+        <th> Being Helped? </th>
+        <th> Help? </th>
+        <th> Delete </th>
+      </tr>
+    </table>
+      
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+      <script>
+        var socket = io();
+        var username = '<%= username %>';
+        var fullname = '<%= fullname %>';
+        
+        socket.on('data', function (data) {
+          $('#qCount').text('There are now ' + data.count + ' students in the Q.');
+          
+          var list = data.items;
+          for (var i = 0; i < list.length; i++) {
+            var val = JSON.parse(list[i].value);
+            addToTable(list[i].key, val.helped, val.name);
+          }
+        });
+        
+        $('#clearButton').click(function() {
+          console.log("clear q");
+          socket.emit('clear request');
+          $('#qCount').text('There are now 0 students in the Q.');
+          $('#qTable').empty();
+          $('#qTable').append('<tr><th> Name </th><th> Being Helped? </th><th> Help? </th><th> Delete </th></tr>');
+        });
+        
+        socket.on('student added', function(data) {
+          console.log("cat");
+          console.log(data);
+          $('#qCount').text('There are now ' + data.count + ' students in the Q.');
+          console.log("QUAKER" + data.name);
+          addToTable(data.name, null, data.fullname);
+        });
+        
+        function addToTable(name, help, name2) {
+          var table = $('#qTable');
+          var cell1 = '<th> ' + name2 +' </th>';
+          var cell2 = '<th id="help' + name + '"> not atm </th>';
+          var cell3 = '<th><button id="assist'+ name +'"> Help </button><th>';
+          var cell4 = '<th><button id="delete'+ name +'"> Delete </button><th>';
+          var row = '<tr id='+ name +'>';
+
+          if (help && help !== 'not atm') {
+            cell2 = '<th id="help' + name + '">'+ help +'</th>';
+          }
+
+          var string = row + cell1 + cell2 + cell3 + cell4 + '</tr>';
+          table.append(string);
+          
+          if (help && help !== 'not atm') {
+            var id = '#' + name;
+            $(id).css({"color":"green"});
+          }
+          
+          var assistId = '#assist' + name;
+          $(assistId).click(function() {
+            socket.emit('help student', {username: name, by: fullname});
+          });
+          
+          var deleteId = '#delete' + name;
+          $(deleteId).click(function(){
+            socket.emit('delete student', name);
+          });
+        }
+        
+        socket.on('student deleted', function(data) {
+          $('#qCount').text('There are now ' + data.count + ' students in the Q.');
+          var id = '#' + data.name;
+          console.log("FISH" + id);
+          $(id).remove();
+        });
+        
+        socket.on('helping', function(data) {
+          var id = '#help' + data.username;
+          $(id).text('YES RN by ' + data.by);
+          var rowId = '#' + data.username;
+          $(rowId).css({"color":"green"});
+          $(rowId).fadeIn(1000).fadeOut(1000).fadeIn(1000);
+        });
+        
+        
+      </script>
+  </body>
+</html>

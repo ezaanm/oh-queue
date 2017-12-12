@@ -1,4 +1,5 @@
 var db = require('../db/databases.js');
+var SHA3 = require('crypto-js/sha3');
 
 //display login page
 var getLogin = function (req, res) {
@@ -9,16 +10,19 @@ var getLogin = function (req, res) {
 //check username and password in the db
 var checkLogin = function (req, res) {
   var username = req.body.username;
-  var password = req.body.password;
+  var password = SHA3(req.body.password).toString();
   db.getPassword(username, function(data, err) {
     if (err) {
           req.session.err = err;
           res.redirect('/');
         } else if (data) {
           if (data.password === password) {
+            req.session.name = data.name;
             req.session.user = username;
             req.session.err = null;
-            if (data.isAdmin === 'true') {
+            console.log(data.isAdmin);
+            if (data.isAdmin) {
+              console.log("OREO");
               req.session.admin = true;
             } else {
               req.session.admin = null;
@@ -57,8 +61,8 @@ var createAccount = function (req, res) {
   }
   
   if (checked && instructorPass == 'admin') {
-    //TODO: store user in db as instructor
-    var userObj = {password: password, fullname: fullname, instructor: true};
+    var encryptedPass = SHA3(password).toString();
+    var userObj = {password: encryptedPass, fullname: fullname, instructor: true};
     var stringUser = JSON.stringify(userObj);
     db.addUser(username, stringUser, function(data, err) {
       if (err) {
@@ -67,13 +71,16 @@ var createAccount = function (req, res) {
       }
     });
     
+    req.session.name = fullname;
+    req.session.user = username;
     req.session.admin = true;
     res.redirect('/queue');
   } else if (checked) {
     req.session.err = 'wrong admin password';
     res.redirect('/signup');
   } else {
-    var userObj = {password: password, fullname: fullname: instructor: false};
+    var encryptedPass = SHA3(password).toString();
+    var userObj = {password: encryptedPass, fullname: fullname, instructor: false};
     var stringUser = JSON.stringify(userObj);
     db.addUser(username, stringUser, function(data, err) {
       if (err) {
@@ -82,6 +89,8 @@ var createAccount = function (req, res) {
       }
     });
     
+    req.session.name = fullname;
+    req.session.user = username;
     req.session.admin = null;
     res.redirect('/queue');
   }
@@ -89,8 +98,16 @@ var createAccount = function (req, res) {
 
 //create server, connect clients
 var queue = function (req, res) {
-  //TODO: sockets && queueu
-  //some sort of socketIO stuff!
+  if (!req.session.user) {
+    req.session.err = 'you are not logged in';
+    res.redirect('/');
+  }
+  
+  if (req.session.admin) {
+    res.render('adminQueue.ejs', {username: req.session.user, fullname: req.session.name});
+  } else {
+    res.render('userQueue.ejs', {username: req.session.user, fullname: req.session.name});
+  }
 }
 
 //log user out, redirect to home

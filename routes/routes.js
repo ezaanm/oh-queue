@@ -7,7 +7,7 @@ var getLogin = function (req, res) {
   req.session.err = null;
 }
 
-//check username and password in the db
+//check username and password in the db and set the session states
 var checkLogin = function (req, res) {
   var username = req.body.username;
   var password = SHA3(req.body.password).toString();
@@ -20,9 +20,7 @@ var checkLogin = function (req, res) {
             req.session.name = data.name;
             req.session.user = username;
             req.session.err = null;
-            console.log(data.isAdmin);
             if (data.isAdmin) {
-              console.log("OREO");
               req.session.admin = true;
             } else {
               req.session.admin = null;
@@ -45,6 +43,7 @@ var signUp = function (req, res) {
   req.session.err = null;
 }
 
+//create an account logic and error handling
 var createAccount = function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
@@ -96,7 +95,7 @@ var createAccount = function (req, res) {
   }
 } 
 
-//create server, connect clients
+//Send to userQ or adminQ depending on sign in
 var queue = function (req, res) {
   if (!req.session.user) {
     req.session.err = 'you are not logged in';

@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
     <meta charset="UTF-8">
     <title>OH Queue</title>
   </head>
   <body>
+  <div class="container text-center">
+    <div class="jumbotron">
+
     <h1> Make a new account kiddo </h1>
     
     <%if (error != null) { %>
@@ -12,19 +19,24 @@
     <% } %>
     <font color="black">
     
+    </div>
+  </div>
+  <div class="col-xs-4 text-center col-sm-offset-4">
     <form action="/createAccount" method="post">
-    	<b>New username here boi:</b> <br>
-      <input type="text" name="username"> <br>
-      <b>New password here fam:</b> <br>
-      <input type="password" name="password"> <br>
-      <b>What's your fullname mate:</b> <br>
-      <input type="text" name="fullname"> <br>
+      <b> Input your information here: </b>
+      <label for="usernamefield" class="sr-only">username: </label>
+      <input type="text" name="username" id="usernamefield" placeholder="new username" class="form-control"> <br>
+      <label for="passwordfield" class="sr-only">password: </label>
+      <input type="password" name="password" id="passwordfield" placeholder="new password" class="form-control"> <br>
+      <label for="namefield" class="sr-only">name: </label>
+      <input type="text" name="fullname" id="namefield" placeholder="full name" class="form-control"> <br>
       <b> Instructor?
       <input type="checkbox" name="instructor" id="isInstructor"> 
        Instructor password: </b>
       <input type="text" name="instructorPass"> 
-      <br/>
-      <input type="submit" value="Submit">
+      </br> </br>
+      <input type="submit" value="Submit" class="btn btn-lg btn-primary btn-block">
     </form>
+  </div>
   </body>
 </html>

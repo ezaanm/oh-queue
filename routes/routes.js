@@ -58,7 +58,7 @@ var createAccount = function (req, res) {
   
   if (checked && instructorPass == 'admin') {
     //TODO: store user in db as instructor
-    var userObj = {password: password, fullname: fullname: instructor: true};
+    var userObj = {password: password, fullname: fullname, instructor: true};
     var stringUser = JSON.stringify(userObj);
     db.addUser(username, stringUser, function(data, err) {
       if (err) {

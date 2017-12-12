@@ -1,0 +1,5 @@
+{ 
+  "accessKeyId": "meep", 
+  "secretAccessKey": "meepbutsecret", 
+  "region": "us-east-1" 
+}
